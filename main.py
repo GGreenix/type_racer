@@ -2,59 +2,74 @@ import pygame
 
 
 
-
-def key_event_handler(ascii_value):
-    if ascii_value > 96 and ascii_value < 123:
-        
-        return chr(ascii_value)
+class game_handler:
+    def __init__ (self,title,sentence):
+        self.dim = (550,550)
+        self.title = title
+        self.sentence = sentence.split(" ")
+        self.current_index = 0
+        self.current_written_word = ""
+        self.run_status = True
+        self.canvas = pygame.display.set_mode(self.dim)
     
-    elif ascii_value == 137:
-        end_word = lambda string_to_check,string_to_equalize: True if string_to_check == string_to_equalize else False
-        global current_word
-        global text_word  #needs to add continuing in sentence
-        text_word = ""
-        current_word = ""
+    def main_loop(self):
+        pygame.display.set_caption(self.title)
+        pygame.init()
 
-        print (current_word,text_word)
-        return end_word(current_word,text_word)
-
-
-def events_handler(pygame_event):
-    if pygame_event.type == pygame.QUIT:
-        global run
-        run = False
-    elif pygame_event.type == pygame.MOUSEBUTTONUP:
-        pos = pygame.mouse.get_pos()
-        print(pos)
-    elif pygame_event.type == pygame.KEYDOWN:
-        
-
-        key = pygame.key.get_pressed()
-        print(key_event_handler(key.index(1)+93)
-
-
-def main():
-    dim = (550,550)
-    title = "type racer"
-
-    global run
-    global current_word
-    global text_word
-
-    pygame.display.set_caption(title)
-    pygame.init()
-
-      
-    canvas = pygame.display.set_mode(dim)
-    run = True
-    current_word = ""
-    text_word = ""
-
-    while run:
+        while run:
         for event in pygame.event.get():
-            events_handler(event)
-            pygame.display.update()
-    pygame.quit()
+            display_handler(canvas,current_index,sentence)
+            run = events_handler(event)
+            
+        pygame.quit()
+    def key_event_handler(ascii_value):
+        global sentence
+        global current_index
+        global text_word 
+        
+        if ascii_value > 96 and ascii_value < 123:
+            #global current_word
+            text_word += chr(ascii_value)
+            return chr(ascii_value)
+        
+        elif ascii_value == 137:
+        # end_word = lambda string_to_check,string_to_equalize: True if string_to_check == string_to_equalize else False
+            #needs to add continuing in sentence
+            if sentence[current_index] == text_word:#true advance in word(return index of next word)
+                current_index += 1
+                text_word = ""
+                print("PASSED!!")
+                return True
+            else:
+                print("wrong word buddy")
+
+    def events_handler(self):
+        
+        if pygame_event.type == pygame.QUIT or current_index == len(sentence):
+            return False
+        elif pygame_event.type == pygame.MOUSEBUTTONUP:
+            pos = pygame.mouse.get_pos()
+        elif pygame_event.type == pygame.KEYDOWN:
+            key = pygame.key.get_pressed()
+            print(key_event_handler(key.index(1)+93),sentence,current_index,text_word)
+        else:
+            return True
+
+def display_handler(canvas,current_index,sentence):
+    bar_color = (255,255,255)
+
+    if not len(sentence) == current_index:
+        pygame.draw.rect(canvas,bar_color,(25,275,(current_index/len(sentence[current_index]))*100,50))
+    pygame.display.update()
+
+
+def main():   
+    title = "type racer"
+    sentence = "hello its me"
+    
+    g_h = game_handler(title,sentence)
+
+    
 
 if __name__ == "__main__":
     main()
