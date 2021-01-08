@@ -1,11 +1,11 @@
-import Game_handler
+import Game_handler as gh
 
 def main():   
     
     title = "type racer"
     sentence = "hello its me"
     
-    g_h = game_handler(title,sentence)
+    g_h = gh.Game_handler(sentence, title)
 
     g_h.main_loop()
     
