@@ -3,13 +3,18 @@ import pygame
 
 
 
-def key_event_handler(ascii_value,current_word="",text_word=""):
+def key_event_handler(ascii_value):
     if ascii_value > 96 and ascii_value < 123:
         
         return chr(ascii_value)
     
     elif ascii_value == 137:
         end_word = lambda string_to_check,string_to_equalize: True if string_to_check == string_to_equalize else False
+        global current_word
+        global text_word  #needs to add continuing in sentence
+        text_word = ""
+        current_word = ""
+
         print (current_word,text_word)
         return end_word(current_word,text_word)
 
@@ -22,11 +27,10 @@ def events_handler(pygame_event):
         pos = pygame.mouse.get_pos()
         print(pos)
     elif pygame_event.type == pygame.KEYDOWN:
-        global current_word
-        global text_word
+        
 
         key = pygame.key.get_pressed()
-        print(key_event_handler(key.index(1)+93,current_word=current_word,text_word=text_word))
+        print(key_event_handler(key.index(1)+93)
 
 
 def main():
