@@ -123,5 +123,5 @@ class Game_handler:
                     self.display_handler()
             self.timer -= 1
                     
-            
+        print (self.timer)
         pygame.quit()
