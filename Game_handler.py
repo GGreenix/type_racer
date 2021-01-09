@@ -1,5 +1,6 @@
 from time import sleep
 import pygame
+import socket
 
 class Game_handler:
     def __init__ (self,title,sentence):
@@ -49,6 +50,8 @@ class Game_handler:
         except ValueError:
             pass
 
+    
+        
 
     def display_progress_bar(self):
         bar_color = (255,255,255)
@@ -113,7 +116,9 @@ class Game_handler:
     def main_loop(self):
         pygame.display.set_caption(self.title)
         pygame.init()
-
+        sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+        addr = ('127.0.0.1',12345)
+        sock.bind(addr)
         while self.run_status:
             
             self.display_timer()
