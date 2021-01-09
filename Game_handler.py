@@ -1,4 +1,5 @@
 import pygame
+import time 
 
 class Game_handler:
     def __init__ (self,title,sentence):
@@ -11,7 +12,6 @@ class Game_handler:
         self.canvas = pygame.display.set_mode(self.dim)
         self.sentence_font = pygame.font.init()
         self.background_color = (0,0,0)
-        
 
     def key_event_handler(self,ascii_value):
         
@@ -19,18 +19,19 @@ class Game_handler:
         if ascii_value > 96 and ascii_value < 123:
             #global current_word
             self.current_written_word += chr(ascii_value)
-            
-            return chr(ascii_value)
+
         elif ascii_value == 135:
             self.current_written_word = self.current_written_word[:-1]
+
         elif ascii_value == 137:
-        
             if self.sentence[self.current_index] == self.current_written_word:#true advance in word(return index of next word)
                 self.current_index += 1
+                print(self.current_index," " ,len(self.sentence))
                 self.current_written_word = ""
                 print("PASSED!!")
                 return True
             else:
+                self.blink_sentence((255,0,0))
                 print("wrong word buddy")
 
     def finish_sesion(self):
@@ -42,15 +43,27 @@ class Game_handler:
                 self.finish_sesion()
             elif pygame_event.type == pygame.KEYDOWN:
                 key = pygame.key.get_pressed()
-                print(self.key_event_handler(key.index(1)+93))
+                self.key_event_handler(key.index(1)+93)
         except ValueError:
             pass
+
 
     def display_progress_bar(self):
         bar_color = (255,255,255)
         
-        pygame.draw.rect(self.canvas,bar_color,(25,50,(self.current_index/len(self.sentence[self.current_index]))*100,50))
+        pygame.draw.rect(self.canvas,bar_color,(25,50,((self.current_index/len(self.sentence))*100)*5,50))
 
+    def blink_sentence(self,color):
+        self.sentence_font = pygame.font.Font('freesansbold.ttf',32)
+        text_to_display = self.sentence_font.render(self.current_written_word,True,color)
+        
+        for i in range(0,2):
+            text_to_display = self.sentence_font.render(self.current_written_word,True,color)
+            self.canvas.blit(text_to_display,(25,275))
+            time.sleep(0.25)
+            text_to_display = self.sentence_font.render(self.current_written_word,True,(255,255,255))
+            self.canvas.blit(text_to_display,(25,275))
+        
     def display_sentence(self):
         self.sentence_font = pygame.font.Font('freesansbold.ttf',32)
         text_color = (255,255,255)
@@ -72,7 +85,8 @@ class Game_handler:
         while self.run_status:
             pygame.time.delay(20)
             for event in pygame.event.get():
-                    self.display_handler()
                     self.events_handler(event)
+                    self.display_handler()
+                    
             
         pygame.quit()
